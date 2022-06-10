@@ -7,8 +7,6 @@ import { Comment } from './Comment';
 
 import styles from './Post.module.css';
 
-// estado = variáveis que eu quero que o componente monitore 
-
 export function Post({ author, publishedAt, content }) {
     const [comments, setComments] = useState([
         'Post muito bacana, hein?!'
@@ -34,7 +32,12 @@ export function Post({ author, publishedAt, content }) {
     }
 
     function handlenNewCommentChange() {
+        event.target.setCustomValidity('');
         setNewCommentText(event.target.value);
+    }
+
+    function handleNewCommentInvalid() {
+        event.target.setCustomValidity('Este campo é obrigatório');
     }
 
     function deleteComment(commentToDelet) {
@@ -44,6 +47,8 @@ export function Post({ author, publishedAt, content }) {
 
         setComments(commentsWithoutDeletedOne);
     }
+
+    const isNewCommentEmpty = newCommentText.length === 0;
 
     return (
         <article className={styles.post}>
@@ -79,10 +84,14 @@ export function Post({ author, publishedAt, content }) {
                     placeholder='Deixe seu comentário'
                     value={newCommentText}
                     onChange={handlenNewCommentChange}
+                    onInvalid={handleNewCommentInvalid}
+                    required
                 />
 
                 <footer>
-                    <button type='submit'>Publicar</button>
+                    <button type='submit' disabled={isNewCommentEmpty} >
+                        Publicar
+                    </button>
                 </footer>
             </form>
 
